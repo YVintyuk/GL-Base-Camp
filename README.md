@@ -81,3 +81,5 @@ Client/Server application ​ to close processes​ on remote HOST.
 │whether the process closed successfully├─────────────────────►                       │
 └───────────────────────────────────────┘                     └───────────────────────┘
 ```
+## Class-diagram
+![class-diagram](./class-diagram.png)
