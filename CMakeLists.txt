@@ -7,4 +7,4 @@ add_executable(yuliana_vintyuk main.cpp)
 
 add_executable(server Server/main.cpp)
 
-add_executable(client Client/main.cpp)
+add_executable(client Client/main.cpp Client/processInfo.cpp Client/processInfo.h)
