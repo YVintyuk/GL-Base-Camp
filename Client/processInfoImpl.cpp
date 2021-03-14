@@ -1,4 +1,5 @@
-#include "processInfo.h"
+#include "processInfoImpl.h"
+#include "processInfoImpl.h"
 
 #include <cstring>
 #include <algorithm>
@@ -18,12 +19,19 @@
 processInfo_t getProcessInfo (size_t pid) {
     processInfo_t ret{};
     ret.pid = pid;
-    strcpy (ret.command, "Hello"); //tmp value
-        std::string cmdPath = "proc/"+std::to_string(pid)+"/cmdline";
-    std::ifstream cmdFile(cmdPath.c_str());
-    std::string cmdStr((std::istreambuf_iterator<char>(cmdFile)),
-                    std::istreambuf_iterator<char>());
-    strncpy(ret.command, cmdStr.c_str(), COMMAND_SIZE);
+
+    std::string pathToProcessCmdFile = "/proc/" + std::to_string(pid) + "/cmdline";
+    std::ifstream streamToReadProcessCmdLineFrom(pathToProcessCmdFile.c_str());
+    std::string processCommandLineString(
+            (std::istreambuf_iterator<char>(streamToReadProcessCmdLineFrom)),
+            std::istreambuf_iterator<char>());
+
+    /**
+     * Copy from std::string in the buffer in the processInfo structure
+     * COMMAND_SIZE - maximal size for copy
+     * Everything longer will be truncated
+     */
+    strncpy(ret.exeName, processCommandLineString.c_str(), COMMAND_SIZE);
     return ret;
 }
 

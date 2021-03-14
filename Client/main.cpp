@@ -4,9 +4,9 @@
 #include <unistd.h>
 #include <string.h>
 #include <iostream>
-#include "processInfo.h"
+#include "processInfoImpl.h"
+#include "processInfoCommon.h"
 
-#define PORT 8080
 
 int open_socket() {
     int sock = 0;
@@ -37,19 +37,18 @@ int open_socket() {
 
 int main(int argc, char const *argv[])
 {
-  //  int sock = open_socket();
-   // if (sock < 0) {
-   //     printf("Error");
-   //   return -1;
-   // }
     auto procVector = getProcessInfoVector(); //get process list
     for (const auto& p : procVector) {
-        std::cout << "\tProcess\n\tpid: " << p.pid
-                  << "\n\tuser: " << p.user
-                  << "\n\tcmd: " << p.command
-                  << "\n\targv: " << p.argv << "\n";
+        std::cout << p;
     }
+
+    int sock = open_socket();
+    if (sock < 0) {
+        printf("Error");
+        return -1;
+    }
+
     size_t procCount = procVector.size();
-//    send(sock, &procCount, sizeof(procCount), 0);
-//    send(sock, &procVector, procVector.size()*sizeof(processInfo_t), 0); //send all process info
+    send(sock, &procCount, sizeof(procCount), 0);
+    send(sock, &procVector[0], procVector.size()*sizeof(processInfo_t), 0); //send all process info
 }
