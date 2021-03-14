@@ -34,6 +34,9 @@ processInfo_t getProcessInfo (size_t pid) {
     processInfo_t ret{};
     ret.pid = pid;
 
+    /**
+     * Reading cmdline info from /proc/pid/cmdline
+     */
     std::string pathToProcessCmdFile = "/proc/" + std::to_string(pid) + "/cmdline";
     std::ifstream streamToReadProcessCmdLineFrom(pathToProcessCmdFile.c_str());
     std::string processCommandLineString(
@@ -52,10 +55,18 @@ processInfo_t getProcessInfo (size_t pid) {
      */
     struct stat info{};
     if (stat(pathToProcessCmdFile.c_str(), &info) == 0) {
+        /**
+         * No need to free, linux will take care of that.
+         * https://linux.die.net/man/3/getpwuid
+         */
         struct passwd *pw = getpwuid(info.st_uid);
         strncpy(ret.user, pw->pw_name, USER_SIZE);
     }
 
+    /**
+     * Reading exe name info from /proc/pid/exe
+     * Since /proc/pid/exe is symbolic link - using readlink to get real name
+     */
     std::string pathToExe = "/proc/" + std::to_string(pid) + "/exe";
     std::string exeNameString = doReadlink(pathToExe);
     strncpy(ret.exeName, exeNameString.c_str(), EXE_NAME_SIZE);
