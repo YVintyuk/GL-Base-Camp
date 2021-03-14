@@ -12,6 +12,17 @@
 #include <pwd.h>
 #include <grp.h>
 #include <sys/stat.h>
+#include <unistd.h>
+#include <limits.h>
+
+std::string doReadlink(std::string const &path) {
+    char buff[PATH_MAX];
+    ssize_t len = ::readlink(path.c_str(), buff, sizeof(buff)-1);
+    if (len != -1) {
+        buff[len] = '\0';
+        return std::string(buff);
+    }
+}
 
 /**
  * retrieve info about 1 process
@@ -34,7 +45,7 @@ processInfo_t getProcessInfo (size_t pid) {
      * COMMAND_SIZE - maximal size for copy
      * Everything longer will be truncated
      */
-    strncpy(ret.commandLine, processCommandLineString.c_str(), COMMAND_SIZE);
+    strncpy(ret.commandLine, processCommandLineString.c_str(), EXE_NAME_SIZE);
 
     /**
      * get user_name and copying to return
@@ -44,6 +55,10 @@ processInfo_t getProcessInfo (size_t pid) {
         struct passwd *pw = getpwuid(info.st_uid);
         strncpy(ret.user, pw->pw_name, USER_SIZE);
     }
+
+    std::string pathToExe = "/proc/" + std::to_string(pid) + "/exe";
+    std::string exeNameString = doReadlink(pathToExe);
+    strncpy(ret.exeName, exeNameString.c_str(), EXE_NAME_SIZE);
     return ret;
 }
 

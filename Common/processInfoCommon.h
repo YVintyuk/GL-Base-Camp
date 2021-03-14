@@ -5,8 +5,8 @@
 #include <ostream>
 
 #define USER_SIZE 255
-#define COMMAND_SIZE 255
-#define ARGV_SIZE 4096
+#define EXE_NAME_SIZE 255
+#define COMMAND_LINE_SIZE 4096
 
 #define PORT 10000
 
@@ -16,8 +16,8 @@
 struct processInfo_t {
     size_t pid;
     char user [USER_SIZE];
-    char exeName [COMMAND_SIZE];
-    char commandLine [ARGV_SIZE];
+    char exeName [EXE_NAME_SIZE];
+    char commandLine [COMMAND_LINE_SIZE];
 
     /**
     * Print process info with streams
