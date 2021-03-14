@@ -9,6 +9,9 @@
 #include <fstream>
 #include <string>
 #include <streambuf>
+#include <pwd.h>
+#include <grp.h>
+#include <sys/stat.h>
 
 /**
  * retrieve info about 1 process
@@ -31,7 +34,16 @@ processInfo_t getProcessInfo (size_t pid) {
      * COMMAND_SIZE - maximal size for copy
      * Everything longer will be truncated
      */
-    strncpy(ret.exeName, processCommandLineString.c_str(), COMMAND_SIZE);
+    strncpy(ret.commandLine, processCommandLineString.c_str(), COMMAND_SIZE);
+
+    /**
+     * get user_name and copying to return
+     */
+    struct stat info{};
+    if (stat(pathToProcessCmdFile.c_str(), &info) == 0) {
+        struct passwd *pw = getpwuid(info.st_uid);
+        strncpy(ret.user, pw->pw_name, USER_SIZE);
+    }
     return ret;
 }
 

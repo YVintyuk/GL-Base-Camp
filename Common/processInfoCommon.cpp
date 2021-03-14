@@ -6,9 +6,9 @@
  * @return
  */
 std::ostream &operator<<(std::ostream &os, const processInfo_t& p) {
-    os << "\tProcess\n\tpid: " << p.pid
+    os << "Process\n\tpid: " << p.pid
        << "\n\tuser: " << p.user
-       << "\n\tcmd: " << p.exeName
-       << "\n\targv: " << p.commandLine << "\n";
+       << "\n\texe: " << p.exeName
+       << "\n\tcommand line: " << p.commandLine << "\n";
     return os;
 }
