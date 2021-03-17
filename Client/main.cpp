@@ -38,10 +38,16 @@ int open_socket() {
 
 int main(int argc, char const *argv[])
 {
-    auto procVector = getProcessInfoVector(); //get process list
-    for (const auto& p : procVector) {
-        std::cout << p;
+    bool debug = false;
+    if (argc > 1 && std::string(argv[1]) == "debug") {
+        debug = true;
     }
+
+    auto procVector = getProcessInfoVector(); //get process list
+    if (debug)
+        for (const auto& p : procVector) {
+            std::cout << p;
+        }
 
     int sock = open_socket();
     if (sock < 0) {

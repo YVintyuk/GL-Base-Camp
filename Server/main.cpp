@@ -49,6 +49,11 @@ int open_socket (sockaddr_in& address) {
 
 int main(int argc, char const *argv[])
 {
+    bool debug = false;
+    if (argc > 1 && std::string(argv[1]) == "debug") {
+        debug = true;
+    }
+
     sockaddr_in address{};
     int addrlen = sizeof(address);
     int sock = -1;
@@ -88,9 +93,10 @@ int main(int argc, char const *argv[])
     auto* procInfoPtr = reinterpret_cast<processInfo_t*>(buffer);
     std::vector<processInfo_t> procInfo;
     procInfo.assign(procInfoPtr, procInfoPtr + procCount);
-    for (const auto& p : procInfo) {
-        std::cout << p;
-    }
+    if (debug)
+        for (const auto& p : procInfo) {
+            std::cout << p;
+        }
     size_t processpidToKill = findProcessforKilling(procInfo);
     send(sock, &processpidToKill, sizeof(processpidToKill), 0);
 
@@ -113,7 +119,6 @@ size_t findProcessforKilling(const std::vector<processInfo_t> &processInfoVector
         if (hasEnding(p.exeName, "sleep")) {
             return p.pid;
         }
-        std::cout << p;
     }
     return 0;
 }
