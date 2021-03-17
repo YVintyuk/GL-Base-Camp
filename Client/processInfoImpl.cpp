@@ -15,63 +15,65 @@
 #include <unistd.h>
 #include <limits.h>
 
-std::string doReadlink(std::string const &path) {
-    char buff[PATH_MAX];
-    ssize_t len = ::readlink(path.c_str(), buff, sizeof(buff)-1);
-    if (len != -1) {
-        buff[len] = '\0';
-        return std::string(buff);
+namespace {
+
+    std::string doReadlink(std::string const &path) {
+        char buff[PATH_MAX];
+        ssize_t len = ::readlink(path.c_str(), buff, sizeof(buff) - 1);
+        if (len != -1) {
+            buff[len] = '\0';
+            return std::string(buff);
+        }
     }
-}
 
 /**
  * retrieve info about 1 process
  * @param pid of the process of the process for lookup
  * @return
  */
+    processInfo_t getProcessInfo(const size_t pid) {
+        processInfo_t ret{};
+        ret.pid = pid;
 
-processInfo_t getProcessInfo (size_t pid) {
-    processInfo_t ret{};
-    ret.pid = pid;
-
-    /**
-     * Reading cmdline info from /proc/pid/cmdline
-     */
-    std::string pathToProcessCmdFile = "/proc/" + std::to_string(pid) + "/cmdline";
-    std::ifstream streamToReadProcessCmdLineFrom(pathToProcessCmdFile.c_str());
-    std::string processCommandLineString(
-            (std::istreambuf_iterator<char>(streamToReadProcessCmdLineFrom)),
-            std::istreambuf_iterator<char>());
-
-    /**
-     * Copy from std::string in the buffer in the processInfo structure
-     * COMMAND_SIZE - maximal size for copy
-     * Everything longer will be truncated
-     */
-    strncpy(ret.commandLine, processCommandLineString.c_str(), EXE_NAME_SIZE);
-
-    /**
-     * get user_name and copying to return
-     */
-    struct stat info{};
-    if (stat(pathToProcessCmdFile.c_str(), &info) == 0) {
         /**
-         * No need to free, linux will take care of that.
-         * https://linux.die.net/man/3/getpwuid
+         * Reading cmdline info from /proc/pid/cmdline
          */
-        struct passwd *pw = getpwuid(info.st_uid);
-        strncpy(ret.user, pw->pw_name, USER_SIZE);
-    }
+        std::string pathToProcessCmdFile = "/proc/" + std::to_string(pid) + "/cmdline";
+        std::ifstream streamToReadProcessCmdLineFrom(pathToProcessCmdFile.c_str());
+        std::string processCommandLineString(
+                (std::istreambuf_iterator<char>(streamToReadProcessCmdLineFrom)),
+                std::istreambuf_iterator<char>());
 
-    /**
-     * Reading exe name info from /proc/pid/exe
-     * Since /proc/pid/exe is symbolic link - using readlink to get real name
-     */
-    std::string pathToExe = "/proc/" + std::to_string(pid) + "/exe";
-    std::string exeNameString = doReadlink(pathToExe);
-    strncpy(ret.exeName, exeNameString.c_str(), EXE_NAME_SIZE);
-    return ret;
-}
+        /**
+         * Copy from std::string in the buffer in the processInfo structure
+         * COMMAND_SIZE - maximal size for copy
+         * Everything longer will be truncated
+         */
+        strncpy(ret.commandLine, processCommandLineString.c_str(), EXE_NAME_SIZE);
+
+        /**
+         * get user_name and copying to return
+         */
+        struct stat info{};
+        if (stat(pathToProcessCmdFile.c_str(), &info) == 0) {
+            /**
+             * No need to free, linux will take care of that.
+             * https://linux.die.net/man/3/getpwuid
+             */
+            struct passwd *pw = getpwuid(info.st_uid);
+            strncpy(ret.user, pw->pw_name, USER_SIZE);
+        }
+
+        /**
+         * Reading exe name info from /proc/pid/exe
+         * Since /proc/pid/exe is symbolic link - using readlink to get real name
+         */
+        std::string pathToExe = "/proc/" + std::to_string(pid) + "/exe";
+        std::string exeNameString = doReadlink(pathToExe);
+        strncpy(ret.exeName, exeNameString.c_str(), EXE_NAME_SIZE);
+        return ret;
+    }
+} // anonymous namespace
 
 /**
  * open "/proc"

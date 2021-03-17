@@ -4,11 +4,9 @@
 #include <vector>
 #include <ostream>
 
-#define USER_SIZE 255
-#define EXE_NAME_SIZE 255
-#define COMMAND_LINE_SIZE 4096
-
-#define PORT 10000
+#define USER_SIZE           255
+#define EXE_NAME_SIZE       255
+#define COMMAND_LINE_SIZE   4096
 
 /**
  * Structure to store
