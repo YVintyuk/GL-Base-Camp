@@ -1,5 +1,5 @@
 #include "processInfoImpl.h"
-#include "processInfoImpl.h"
+#include "processInfoCommon.h"
 
 #include <cstring>
 #include <algorithm>
