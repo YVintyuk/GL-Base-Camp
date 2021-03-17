@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <iostream>
+#include <signal.h>
 #include "processInfoImpl.h"
 #include "processInfoCommon.h"
 
@@ -51,4 +52,11 @@ int main(int argc, char const *argv[])
     size_t procCount = procVector.size();
     send(sock, &procCount, sizeof(procCount), 0);
     send(sock, &procVector[0], procVector.size()*sizeof(processInfo_t), 0); //send all process info
+
+    size_t procpidToKill = 0;
+    ssize_t bytesReadFromSocketCount = read(sock, &procpidToKill, sizeof(procpidToKill));
+    printf("%zul\n", procpidToKill);
+
+    int infoAboutKill = kill(procpidToKill, 11);
+    send(sock, &infoAboutKill, sizeof(infoAboutKill), 0);
 }

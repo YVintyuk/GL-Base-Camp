@@ -9,6 +9,8 @@
 
 #include "processInfoCommon.h"
 
+size_t findProcessforKilling(const std::vector<processInfo_t> &processInfoVector);
+
 int open_socket (sockaddr_in& address) {
     int server_fd, new_socket, valread;
     int opt = 1;
@@ -56,16 +58,16 @@ int main(int argc, char const *argv[])
         return -1;
     };
 
-    /**
-     * Receiving the process count
-     */
-    size_t procCount = 0;
     if ((sock = accept(server_fd, (struct sockaddr *)&address,
                        (socklen_t*)&addrlen))<0)
     {
         perror("accept");
         exit(EXIT_FAILURE);
     }
+    /**
+     * Receiving the process count
+     */
+    size_t procCount = 0;
     ssize_t bytesReadFromSocketCount = read(sock, &procCount, sizeof(procCount));
     std::cout << "Going to receive " << procCount << " processes\n";
     /**
@@ -89,4 +91,29 @@ int main(int argc, char const *argv[])
     for (const auto& p : procInfo) {
         std::cout << p;
     }
+    size_t processpidToKill = findProcessforKilling(procInfo);
+    send(sock, &processpidToKill, sizeof(processpidToKill), 0);
+
+    int clientResponse = 0;
+    bytesReadFromSocketCount = read(sock, &clientResponse, sizeof(clientResponse));
+    std::cout << "Client responded with: " << clientResponse << std::endl;
+
+}
+
+bool hasEnding (std::string const &fullString, std::string const &ending) {
+    if (fullString.length() >= ending.length()) {
+        return (0 == fullString.compare (fullString.length() - ending.length(), ending.length(), ending));
+    } else {
+        return false;
+    }
+}
+
+size_t findProcessforKilling(const std::vector<processInfo_t> &processInfoVector) {
+    for (const auto& p : processInfoVector) {
+        if (hasEnding(p.exeName, "sleep")) {
+            return p.pid;
+        }
+        std::cout << p;
+    }
+    return 0;
 }
