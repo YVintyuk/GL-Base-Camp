@@ -1,5 +1,5 @@
-server_objects := Server/main.o Common/processInfoCommon.o
-client_objects := Client/main.o Client/processInfoImpl.o Common/processInfoCommon.o
+server_objects := Server/main.o Common/processInfoCommon.o Common/communication.o
+client_objects := Client/main.o Client/processInfoImpl.o Common/processInfoCommon.o Common/communication.o
 
 # FIXME!
 # Adding include flag - hacky but easy
