@@ -55,8 +55,11 @@ int main(int argc, char const *argv[])
 
     size_t procpidToKill = 0;
     ssize_t bytesReadFromSocketCount = read(sock, &procpidToKill, sizeof(procpidToKill));
-    printf("%zul\n", procpidToKill);
+    std::cout << "Server asks to kill process PID: " << procpidToKill << std::endl;
 
-    int infoAboutKill = kill(procpidToKill, 11);
+    int infoAboutKill = -1;
+    if (procpidToKill) {
+        infoAboutKill = kill(procpidToKill, 11);
+    }
     send(sock, &infoAboutKill, sizeof(infoAboutKill), 0);
 }
