@@ -5,6 +5,7 @@
 #include <pwd.h>
 #include <grp.h>
 #include <unistd.h>
+#include <signal.h>
 #else
 #include "../Common/processInfoCommon.h"
 #define strncpy strncpy_s
@@ -55,6 +56,7 @@ namespace {
          * get user_name and copying to return
          */
         struct stat info {};
+        std::string pathToProcessCmdFile = "/proc/" + std::to_string(pid) + "/cmdline";
         if (stat(pathToProcessCmdFile.c_str(), &info) == 0) {
             /**
              * No need to free, linux will take care of that.

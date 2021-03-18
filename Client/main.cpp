@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <iostream>
-#include <signal.h>
 #include "processInfoImpl.h"
 
 #ifdef __linux__
