@@ -1,23 +1,47 @@
 #include "communication.h"
 
+#ifdef __linux__
 #include <sys/socket.h>
-#include <stdlib.h>
 #include <unistd.h>
-#include <stdio.h>
 #include <arpa/inet.h>
+#else
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#endif // __linux__
+
+#include <stdlib.h>
+#include <stdio.h>
+
+#ifdef __linux__
+#define OPT_TYPE int
+#define SOCKOPTS SO_REUSEADDR | SO_REUSEPORT
+#else
+#pragma comment(lib, "Ws2_32.lib")
+#define OPT_TYPE const char
+#define SOCKOPTS SO_REUSEADDR
+#endif
 
 int startListeningSocket(sockaddr_in& address) {
     int server_fd;
-    int opt = 1;
+    OPT_TYPE opt = 1;
+
+#ifndef __linux__
+    WSADATA wsaData;
+    int iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
+    if (iResult != NO_ERROR) {
+      printf("WSAStartup failed: %d\n", iResult);
+      return 1;
+    }
+#endif // 
 
     // Creating socket file descriptor
-    if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
+    if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) <= 0) {
         perror("socket failed");
         exit(EXIT_FAILURE);
     }
 
     // Forcefully attaching socket to the port 10000
-    if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT,
+    if (setsockopt(server_fd, SOL_SOCKET, SOCKOPTS,
                    &opt, sizeof(opt)))
     {
         perror("setsockopt");
@@ -43,6 +67,15 @@ int startListeningSocket(sockaddr_in& address) {
 }
 
 int connectToServer() {
+#ifndef __linux__
+    WSADATA wsaData;
+    int iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
+    if (iResult != NO_ERROR) {
+        printf("WSAStartup failed: %d\n", iResult);
+        return 1;
+    }
+#endif // 
+
     int sock = 0;
     struct sockaddr_in serv_addr{};
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0)

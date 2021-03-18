@@ -1,14 +1,19 @@
-#include <unistd.h>
 #include <stdio.h>
-#include <sys/socket.h>
 #include <stdlib.h>
-#include <netinet/in.h>
 #include <string.h>
 #include <iostream>
 #include <vector>
-
+#ifdef __linux__
+#include <unistd.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
 #include "processInfoCommon.h"
 #include "communication.h"
+#else
+#include <winsock2.h>
+#include "../Common/processInfoCommon.h"
+#include "../Common/communication.h"
+#endif // __linux__
 
 size_t findProcessforKilling(const std::vector<processInfo_t> &processInfoVector);
 
@@ -29,7 +34,7 @@ int main(int argc, char const *argv[])
     };
 
     if ((sock = accept(server_fd, (struct sockaddr *)&address,
-                       (socklen_t*)&addrlen))<0)
+                       SOCKLEN&addrlen))<0)
     {
         perror("accept");
         exit(EXIT_FAILURE);
@@ -38,7 +43,7 @@ int main(int argc, char const *argv[])
      * Receiving the process count
      */
     size_t procCount = 0;
-    ssize_t bytesReadFromSocketCount = read(sock, &procCount, sizeof(procCount));
+    READ_TYPE bytesReadFromSocketCount = READ(sock, BUFFER_CAST&procCount, sizeof(procCount));
     std::cout << "Going to receive " << procCount << " processes\n";
     /**
      * Done receiving process count
@@ -48,11 +53,11 @@ int main(int argc, char const *argv[])
      * Receiving process list
      */
     bytesReadFromSocketCount = 0;
-    size_t bufferSize =  procCount * sizeof(processInfo_t);
+    READ_TYPE bufferSize =  procCount * sizeof(processInfo_t);
     auto* buffer = static_cast<char *>(malloc(bufferSize));
     while (bytesReadFromSocketCount < bufferSize) {
-        bytesReadFromSocketCount += read(
-                sock, buffer + bytesReadFromSocketCount, bufferSize - bytesReadFromSocketCount);
+        bytesReadFromSocketCount += READ(
+                sock, BUFFER_CAST(buffer + bytesReadFromSocketCount), bufferSize - bytesReadFromSocketCount);
     }
 
     auto* procInfoPtr = reinterpret_cast<processInfo_t*>(buffer);
@@ -63,10 +68,10 @@ int main(int argc, char const *argv[])
             std::cout << p;
         }
     size_t processpidToKill = findProcessforKilling(procInfo);
-    send(sock, &processpidToKill, sizeof(processpidToKill), 0);
+    send(sock, BUFFER_CAST&processpidToKill, sizeof(processpidToKill), 0);
 
     int clientResponse = 0;
-    bytesReadFromSocketCount = read(sock, &clientResponse, sizeof(clientResponse));
+    bytesReadFromSocketCount = READ(sock, BUFFER_CAST&clientResponse, sizeof(clientResponse));
     std::cout << "Client responded with: " << clientResponse << std::endl;
 
 }

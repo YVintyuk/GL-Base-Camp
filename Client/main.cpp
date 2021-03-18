@@ -1,11 +1,18 @@
 #include <stdio.h>
-#include <unistd.h>
 #include <string.h>
 #include <iostream>
 #include <signal.h>
 #include "processInfoImpl.h"
+
+#ifdef __linux__
+#include <unistd.h>
 #include "processInfoCommon.h"
 #include "communication.h"
+#else
+
+#include "../Common/processInfoCommon.h"
+#include "../Common/communication.h"
+#endif // __linux__
 
 int main(int argc, char const *argv[])
 {
@@ -27,16 +34,13 @@ int main(int argc, char const *argv[])
     }
 
     size_t procCount = procVector.size();
-    send(sock, &procCount, sizeof(procCount), 0);
-    send(sock, &procVector[0], procVector.size()*sizeof(processInfo_t), 0); //send all process info
+    send(sock, BUFFER_CAST&procCount, sizeof(procCount), 0);
+    send(sock, BUFFER_CAST&procVector[0], procVector.size()*sizeof(processInfo_t), 0); //send all process info
 
     size_t procpidToKill = 0;
-    ssize_t bytesReadFromSocketCount = read(sock, &procpidToKill, sizeof(procpidToKill));
+    READ_TYPE bytesReadFromSocketCount = READ(sock, BUFFER_CAST&procpidToKill, sizeof(procpidToKill));
     std::cout << "Server asks to kill process PID: " << procpidToKill << std::endl;
 
-    int infoAboutKill = -1;
-    if (procpidToKill) {
-        infoAboutKill = kill(procpidToKill, 11);
-    }
-    send(sock, &infoAboutKill, sizeof(infoAboutKill), 0);
+    int infoAboutKill = killProcess(procpidToKill);
+    send(sock, BUFFER_CAST&infoAboutKill, sizeof(infoAboutKill), 0);
 }
