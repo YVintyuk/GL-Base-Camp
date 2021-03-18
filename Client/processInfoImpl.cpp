@@ -7,6 +7,12 @@
 #include <unistd.h>
 #include <signal.h>
 #else
+#include <windows.h>
+#include <stdio.h>
+#include <tchar.h>
+#include <psapi.h>
+#include <locale>
+#pragma comment(lib, "Psapi.lib")
 #include "../Common/processInfoCommon.h"
 #define strncpy strncpy_s
 #endif
@@ -34,7 +40,7 @@ namespace {
     }
 #endif
 
-    std::string getCmdLine(const size_t pid) {
+    std::string getCmdLine(const PID_TYPE pid) {
 #ifdef __linux__
         /**
          * Reading cmdline info from /proc/pid/cmdline
@@ -50,7 +56,7 @@ namespace {
 #endif
     }
 
-    std::string getUserName(const size_t pid) {
+    std::string getUserName(const PID_TYPE pid) {
 #ifdef __linux__
         /**
          * get user_name and copying to return
@@ -72,7 +78,7 @@ namespace {
     }
 
 
-    std::string getExeName(const size_t pid) {
+    std::string getExeName(const PID_TYPE pid) {
 #ifdef __linux__
         /**
          * Reading exe name info from /proc/pid/exe
@@ -81,7 +87,28 @@ namespace {
         std::string pathToExe = "/proc/" + std::to_string(pid) + "/exe";
         return doReadlink(pathToExe);
 #else
-        return "NaE";
+        TCHAR szProcessName[MAX_PATH] = TEXT("NaE");
+
+        // Get a handle to the process.
+        HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION |
+            PROCESS_VM_READ,
+            FALSE, pid);
+
+        // Get the process name.
+        if (NULL != hProcess)
+        {
+            HMODULE hMod;
+            DWORD cbNeeded;
+
+            if (EnumProcessModules(hProcess, &hMod, sizeof(hMod), &cbNeeded))
+            {
+                GetModuleFileNameEx(hProcess, hMod, szProcessName, sizeof(szProcessName) / sizeof(TCHAR));
+            }
+        }
+        // Release the handle to the process
+        CloseHandle(hProcess);
+        std::wstring ws = szProcessName;
+        return std::string(ws.begin(), ws.end());
 #endif
     }
     /**
@@ -89,7 +116,7 @@ namespace {
      * @param pid of the process of the process for lookup
      * @return
      */
-    processInfo_t getProcessInfo(const size_t pid) {
+    processInfo_t getProcessInfo(const PID_TYPE pid) {
         processInfo_t ret{};
         ret.pid = pid;
 
@@ -106,6 +133,14 @@ namespace {
         return ret;
     }
 } // anonymous namespace
+
+#ifndef __linux__
+
+void PrintProcessNameAndID(DWORD processID)
+{
+
+}
+#endif
 
 /**
  * open "/proc"
@@ -137,9 +172,26 @@ std::vector <processInfo_t> getProcessInfoVector() {
         throw std::runtime_error(std::strerror(errno));
     }
 #else
-    ret.push_back(getProcessInfo(1));
-    ret.push_back(getProcessInfo(2));
-    ret.push_back(getProcessInfo(3));
+    // Get the list of process identifiers.
+    DWORD aProcesses[MAX_PROCESS_COUNT], cbNeeded, cProcesses;
+    unsigned int i;
+
+    if (!EnumProcesses(aProcesses, sizeof(aProcesses), &cbNeeded))
+    {
+        return ret;
+    }
+
+    // Calculate how many process identifiers were returned.
+    cProcesses = cbNeeded / sizeof(DWORD);
+
+    // Print the name and process identifier for each process.
+    for (i = 0; i < cProcesses; i++)
+    {
+        if (aProcesses[i] != 0)
+        {
+            ret.push_back(getProcessInfo(aProcesses[i]));
+        }
+    }
 #endif
     return ret;
 }
