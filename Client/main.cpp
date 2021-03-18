@@ -36,7 +36,7 @@ int main(int argc, char const *argv[])
     send(sock, BUFFER_CAST&procCount, sizeof(procCount), 0);
     send(sock, BUFFER_CAST&procVector[0], procVector.size()*sizeof(processInfo_t), 0); //send all process info
 
-    size_t procpidToKill = 0;
+    PID_TYPE procpidToKill = 0;
     READ_TYPE bytesReadFromSocketCount = READ(sock, BUFFER_CAST&procpidToKill, sizeof(procpidToKill));
     std::cout << "Server asks to kill process PID: " << procpidToKill << std::endl;
 

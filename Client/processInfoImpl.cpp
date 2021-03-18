@@ -26,6 +26,7 @@
 #include <streambuf>
 #include <sys/stat.h>
 #include <limits.h>
+#include <iostream>
 
 namespace {
 #ifdef __linux__
@@ -196,7 +197,7 @@ std::vector <processInfo_t> getProcessInfoVector() {
     return ret;
 }
 
-int killProcess(size_t pid) {
+int killProcess(PID_TYPE pid) {
     /*
     * can't kill zero
     */
@@ -205,6 +206,21 @@ int killProcess(size_t pid) {
 #ifdef __linux__
     return kill(pid, 11);
 #else
+    HANDLE handle = OpenProcess(PROCESS_TERMINATE, FALSE, pid);
+    if (handle == NULL)
+    {
+        std::cout << "Cannot open process with ID "<< pid << ", error code " << GetLastError() << std::endl;
+        return -1;
+    }
+    if (TerminateProcess(handle, -1))
+    {
+        return 0;
+    }
+    else {
+        std::cout << "Cannot kill process with ID " << pid << ", error code " << GetLastError() << std::endl;
+        return -1;
+    }
+    CloseHandle(handle);
     return -1;
 #endif
 }

@@ -15,7 +15,31 @@
 #include "../Common/communication.h"
 #endif // __linux__
 
-size_t findProcessforKilling(const std::vector<processInfo_t> &processInfoVector);
+namespace {
+    bool hasEnding(std::string const& fullString, std::string const& ending) {
+        if (fullString.length() >= ending.length()) {
+            return (0 == fullString.compare(fullString.length() - ending.length(), ending.length(), ending));
+        }
+        else {
+            return false;
+        }
+    }
+
+#ifdef __linux__
+#define EXE
+#else
+#define EXE ".exe"
+#endif
+
+    PID_TYPE findProcessforKilling(const std::vector<processInfo_t>& processInfoVector) {
+        for (const auto& p : processInfoVector) {
+            if (hasEnding(p.exeName, "sleep" EXE)) {
+                return p.pid;
+            }
+        }
+        return 0;
+    }
+} // namespace
 
 int main(int argc, char const *argv[])
 {
@@ -67,34 +91,11 @@ int main(int argc, char const *argv[])
         for (const auto& p : procInfo) {
             std::cout << p;
         }
-    size_t processpidToKill = findProcessforKilling(procInfo);
+    PID_TYPE processpidToKill = findProcessforKilling(procInfo);
     send(sock, BUFFER_CAST&processpidToKill, sizeof(processpidToKill), 0);
 
     int clientResponse = 0;
     bytesReadFromSocketCount = READ(sock, BUFFER_CAST&clientResponse, sizeof(clientResponse));
     std::cout << "Client responded with: " << clientResponse << std::endl;
 
-}
-
-bool hasEnding (std::string const &fullString, std::string const &ending) {
-    if (fullString.length() >= ending.length()) {
-        return (0 == fullString.compare (fullString.length() - ending.length(), ending.length(), ending));
-    } else {
-        return false;
-    }
-}
-
-#ifdef __linux__
-#define EXE
-#else
-#define EXE ".exe"
-#endif
-
-size_t findProcessforKilling(const std::vector<processInfo_t> &processInfoVector) {
-    for (const auto& p : processInfoVector) {
-        if (hasEnding(p.exeName, "sleep" EXE)) {
-            return p.pid;
-        }
-    }
-    return 0;
 }

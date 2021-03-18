@@ -8,11 +8,17 @@
 #define EXE_NAME_SIZE       255
 #define COMMAND_LINE_SIZE   4096
 
+#ifdef __linux__
+#define PID_TYPE size_t
+#else
+#define PID_TYPE unsigned long
+#endif
+
 /**
  * Structure to store
  */
 struct processInfo_t {
-    size_t pid;
+    PID_TYPE pid;
     char user [USER_SIZE];
     char exeName [EXE_NAME_SIZE];
     char commandLine [COMMAND_LINE_SIZE];
