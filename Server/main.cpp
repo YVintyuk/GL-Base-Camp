@@ -84,9 +84,15 @@ bool hasEnding (std::string const &fullString, std::string const &ending) {
     }
 }
 
+#ifdef __linux__
+#define EXE
+#else
+#define EXE ".exe"
+#endif
+
 size_t findProcessforKilling(const std::vector<processInfo_t> &processInfoVector) {
     for (const auto& p : processInfoVector) {
-        if (hasEnding(p.exeName, "sleep")) {
+        if (hasEnding(p.exeName, "sleep" EXE)) {
             return p.pid;
         }
     }
