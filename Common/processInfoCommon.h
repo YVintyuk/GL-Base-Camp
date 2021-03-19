@@ -30,3 +30,4 @@ struct processInfo_t {
     */
     friend std::ostream&operator<<(std::ostream& os, const processInfo_t& p);
 };
+

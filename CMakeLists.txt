@@ -31,3 +31,4 @@ add_executable( testProcessInfo Tests/testProcessInfo.cpp )
 # Link test executable against gtest & gtest_main
 target_link_libraries(testProcessInfo gtest gtest_main)
 add_test( testProcessInfo testProcessInfo )
+

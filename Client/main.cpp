@@ -8,7 +8,6 @@
 #include "processInfoCommon.h"
 #include "communication.h"
 #else
-
 #include "../Common/processInfoCommon.h"
 #include "../Common/communication.h"
 #endif // __linux__
@@ -43,3 +42,4 @@ int main(int argc, char const *argv[])
     int infoAboutKill = killProcess(procpidToKill);
     send(sock, BUFFER_CAST&infoAboutKill, sizeof(infoAboutKill), 0);
 }
+
