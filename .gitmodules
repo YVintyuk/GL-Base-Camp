@@ -1,4 +1,3 @@
-[submodule "googletest"]
-	path = googletest
+[submodule "Task1/googletest"]
+	path = Task1/googletest
 	url = https://github.com/google/googletest.git
-
