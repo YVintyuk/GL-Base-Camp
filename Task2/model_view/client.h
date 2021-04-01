@@ -3,13 +3,6 @@
 #include <list>
 #include "model/systemInfo.h"
 
-/*
- systemInfo: list<systemInfo>
- savingPeriod: int
- agingCount: int
-
- */
-
 class client {
 private:
     std::list <systemInfo> m_systemInfo;

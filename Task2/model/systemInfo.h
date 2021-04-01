@@ -3,13 +3,6 @@
 #include <vector>
 #include "model/processInfo.h"
 
-/*
- getFreeMemory(): size_t
- getUsedMemory(): size_t
- getUsedCPU(): size_t
- getProcessInfo(): vector<processInfo>
- */
-
 class systemInfo {
 private:
     std::vector <processInfo> processInfoVector;

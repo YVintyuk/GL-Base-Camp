@@ -2,17 +2,9 @@
 #include "processInfo.h"
 #include "model_view/runable.h"
 #include "model_view/client.h"
-
-/*
- usedMemory: size_t
- usedCPU: unsigned int
- processName: string
-
- processInfo(pid_t): constructor
- getUsedMemory(): size_t
- getUsedCPU(): unsigned int
- getProcessName(): string
- */
+#include <dirent.h>
+#include <cstring>
+#include <algorithm>
 
 /**
  * open "/proc"
@@ -38,7 +30,7 @@ std::vector <processInfo> getProcessInfoVector() {
                         [](char c){ return std::isdigit(c); })) {
             continue;
         }
-        ret.push_back(getProcessInfo(atoi(dirp->d_name)));
+        ret.push_back(processInfo(atoi(dirp->d_name)));
     }
     if(closedir(dir)) {
         throw std::runtime_error(std::strerror(errno));

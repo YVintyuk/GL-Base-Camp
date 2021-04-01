@@ -13,7 +13,7 @@ private:
 public:
     size_t getUsedMemory();
     size_t getUsedCPU();
-    processInfo(pid_t);
+    processInfo(pid_t) { };
     std::string getProcessName();
 };
 
