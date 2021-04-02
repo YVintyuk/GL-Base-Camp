@@ -9,8 +9,6 @@
 #include "systemInfoImplWindows.h"
 #endif
 
-client model_view.run;
-
 // The function we want to execute on the new thread.
 void UIThreadFunction(int argc, char **argv)
 {
@@ -26,11 +24,17 @@ void UIThreadFunction(int argc, char **argv)
 }
 
 int main(int argc, char **argv) {
-// Constructs the new thread and runs it. Does not block execution.
+    client model_view { };
+    model_view.run();
+
+    // Constructs the new thread and runs it. Does not block execution.
     std::thread UIThread(UIThreadFunction, argc, argv);
+
 
 //TODO start data gathering thread (client)
 
 // Makes the main thread wait for the new thread to finish execution, therefore blocks its own execution.
+
     UIThread.join();
+    model_view.stop();
 }

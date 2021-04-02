@@ -15,8 +15,9 @@ private:
 
 protected:
     virtual void iteration() {
-        std::this_thread::sleep_for(2000ms);
-        printf("Hello, I`m client");
+        printf("Hello, I`m client\n");
+        auto duration = std::chrono::duration<double, std::milli>(1000);
+        std::this_thread::sleep_for(duration);
     };
 
 public:

@@ -7,9 +7,6 @@
 #include <list>
 #include <cstddef>
 
-
-
-
 /*
  systemInfo: list<systemInfo>
  savingPeriod: int

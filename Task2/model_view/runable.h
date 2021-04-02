@@ -11,7 +11,8 @@ private:
     void threadFunction () {
         while (!m_stop) {
             iteration();
-            std::this_thread::sleep_for(100ms);
+            auto duration = std::chrono::duration<double, std::milli>(100);
+            std::this_thread::sleep_for(duration);
         }
     };
 
