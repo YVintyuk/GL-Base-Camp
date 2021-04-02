@@ -8,6 +8,8 @@
 #include <cstddef>
 
 
+
+
 /*
  systemInfo: list<systemInfo>
  savingPeriod: int

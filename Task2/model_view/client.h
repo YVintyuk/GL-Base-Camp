@@ -2,8 +2,9 @@
 
 #include <list>
 #include "model/systemInfo.h"
+#include "runable.h"
 
-class client {
+class client : public runable {
 private:
     std::list <systemInfo> m_systemInfo;
     int savingPeriod;
@@ -11,8 +12,14 @@ private:
     int saveSystemInfoPeriodicaly();
     int aging();
 
+
+protected:
+    virtual void iteration() {
+        std::this_thread::sleep_for(2000ms);
+        printf("Hello, I`m client");
+    };
+
 public:
-    void run();
     int transferInfoToUI();
     int saveInfoToFile();
 };

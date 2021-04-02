@@ -2,11 +2,14 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Box.H>
+#include "model_view/client.h"
 
 #ifndef __linux__
 #include "processInfoImplWindows.h"
 #include "systemInfoImplWindows.h"
 #endif
+
+client model_view.run;
 
 // The function we want to execute on the new thread.
 void UIThreadFunction(int argc, char **argv)

@@ -4,8 +4,9 @@
 #include "uiObjects.h"
 #include <list>
 #include <vector>
+#include "runable.h"
 
-class ui {
+class ui : public runable {
 private:
     std::list <systemInfo> systemInfoList;
     std::vector <uiObjects> uiObjectsVector;
