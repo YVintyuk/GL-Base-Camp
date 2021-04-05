@@ -18,4 +18,5 @@ int main(int argc, char **argv) {
 //TODO start data gathering thread (client)
 
     model_view.stop();
+    ui.stop();
 }

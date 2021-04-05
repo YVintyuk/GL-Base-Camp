@@ -16,20 +16,38 @@ private:
     int saveDataNow();
     int changeSavingPeriod(int period);
     int prepareUI();
-    int reareshUI();
+    int refreshUI(){
+        static int counter = 0;
+        static std::string label;
+        counter++;
+        label = std::to_string(counter);
+        Fl::lock();
+        box->label(label.c_str());
+        Fl::unlock();
+        Fl::awake();
+    };
+    Fl_Box *box;
+
+protected:
+    virtual void iteration() {
+        refreshUI();
+        auto duration = std::chrono::duration<double, std::milli>(1000);
+        std::this_thread::sleep_for(duration);
+    };
 
 public:
-    void run();
     // The function we want to execute on the new thread.
     UserInterface () {
+        Fl::lock();
         Fl_Window *window = new Fl_Window(300,180);
-        Fl_Box *box = new Fl_Box(20,40,260,100,"Hello, World!");
+        box = new Fl_Box(20,40,260,100,"Hello, World!");
         box->box(FL_UP_BOX);
         box->labelsize(36);
         box->labelfont(FL_BOLD+FL_ITALIC);
         box->labeltype(FL_SHADOW_LABEL);
         window->end();
         window->show();
+        run();
         Fl::run();
     }
 
