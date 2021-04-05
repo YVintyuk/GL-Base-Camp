@@ -1,12 +1,12 @@
 #pragma once
 
 #include <list>
-#include "model/systemInfo.h"
-#include "runnable.h"
+#include "model/SystemInfo.h"
+#include "Runnable.h"
 
-class client : public runnable {
+class Client : public Runnable {
 private:
-    std::list <systemInfo> m_systemInfo;
+    std::list <SystemInfo> m_systemInfo;
     int savingPeriod;
     int agingCount;
     int saveSystemInfoPeriodicaly();

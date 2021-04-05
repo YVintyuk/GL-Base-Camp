@@ -2,7 +2,7 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Box.H>
-#include "model_view/client.h"
+#include "model_view/Client.h"
 
 #ifndef __linux__
 #include "processInfoImplWindows.h"
@@ -24,7 +24,7 @@ void UIThreadFunction(int argc, char **argv)
 }
 
 int main(int argc, char **argv) {
-    client model_view { };
+    Client model_view { };
     model_view.run();
 
     // Constructs the new thread and runs it. Does not block execution.

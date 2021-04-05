@@ -2,7 +2,7 @@
 
 ## WBS
 Task1: task number 2:
-Client/Server application ​ to close processes​ on remote HOST.
+client/Server application ​ to close processes​ on remote HOST.
 * client gets processes list and sends them by server request.
 * server will request to close one of the processes on the client's host.
 * client has to reply with success or failure.
@@ -23,7 +23,7 @@ Client/Server application ​ to close processes​ on remote HOST.
 * rewrite the server with C++
 * rewrite everything for Windows
 
-#### Client:
+#### client:
 * get a list of processes
 * create a socket
 * send process list to server (message1 to server)
@@ -42,7 +42,7 @@ Client/Server application ​ to close processes​ on remote HOST.
 ## UML-diagram
 ```
        ┌────────┐                                                          ┌────────┐
-       │ Client │                                                          │ Server │
+       │ client │                                                          │ Server │
        └────┬───┘                                                          └───┬────┘
             │                                                                  │
             │                                                                  │

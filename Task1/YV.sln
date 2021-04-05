@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31112.23
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Common", "YV.vcxproj", "{3AB39EFD-648F-4CB8-9854-5E36CEC4D8E4}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client", "Client\Client\Client.vcxproj", "{18A947E7-7165-4D2B-AAFD-2C692A641502}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "client", "client\client\client.vcxproj", "{18A947E7-7165-4D2B-AAFD-2C692A641502}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Server", "Server\Server\Server.vcxproj", "{7F49CCE5-F252-4464-9FB5-68EDD154FEE0}"
 EndProject

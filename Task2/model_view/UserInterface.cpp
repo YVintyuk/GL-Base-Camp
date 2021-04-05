@@ -1,6 +1,6 @@
-#include "model/processInfo.h"
-#include "model/systemInfo.h"
-#include "runnable.h"
+#include "model/ProcessInfo.h"
+#include "model/SystemInfo.h"
+#include "Runnable.h"
 #include "uiObjects.h"
 
 /*uiObjectsVector vector<uiObjects>

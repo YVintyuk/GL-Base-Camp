@@ -10,7 +10,7 @@ link_libraries(
         pthread
 )
 
-add_executable(task2 main.cpp model_view/client.cpp model_view/runnable.cpp
-        model_view/UI.cpp  model_view/uiObjects.cpp
-        model/processInfo.cpp  model/systemInfo.cpp
-        model/LinuxImpl/processInfoImplLinux.cpp model/LinuxImpl/systemInfoImplLinux.cpp)
+add_executable(task2 main.cpp model_view/Client.cpp model_view/Runnable.cpp
+        model_view/UserInterface.cpp model_view/uiObjects.cpp
+        model/ProcessInfo.cpp model/SystemInfo.cpp
+        model/LinuxImpl/ProcessInfoImplLinux.cpp model/LinuxImpl/SystemInfoImplLinux.cpp)

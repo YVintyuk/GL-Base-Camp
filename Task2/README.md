@@ -33,7 +33,7 @@ modules description, UML diagrams).
 * Check if it is possible to use UDC socket for Windows (internal socket, internal for the system) - 4 hours
 * Choose a graphics library, read it and make sure its cross-platform for Windows - 4 hours
 
-#### Client (Thread 1, 24 hours):
+#### client (Thread 1, 24 hours):
 * Get the following data from the system (8 hours):
 	list of processes
 	memory status

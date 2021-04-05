@@ -1,14 +1,14 @@
 #pragma once
 
-#include "model/systemInfo.h"
+#include "model/SystemInfo.h"
 #include "uiObjects.h"
 #include <list>
 #include <vector>
-#include "runnable.h"
+#include "Runnable.h"
 
-class ui : public runnable {
+class UserInterface : public Runnable {
 private:
-    std::list <systemInfo> systemInfoList;
+    std::list <SystemInfo> systemInfoList;
     std::vector <uiObjects> uiObjectsVector;
     int saveDataNow();
     int changeSavingPeriod(int period);

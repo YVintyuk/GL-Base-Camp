@@ -4,7 +4,7 @@
 #include <string>
 #include <list>
 
-class processInfo {
+class ProcessInfo {
 private:
     size_t usedMemory;
     size_t usedCPU;
@@ -13,7 +13,7 @@ private:
 public:
     size_t getUsedMemory();
     size_t getUsedCPU();
-    processInfo(pid_t) { };
+    ProcessInfo(pid_t) { };
     std::string getProcessName();
 };
 

@@ -4,7 +4,7 @@
 #include <chrono>
 
 
-class runnable {
+class Runnable {
 private:
     std::thread m_thread;
     bool m_stop = false;
@@ -21,7 +21,7 @@ protected:
 
 public:
     void run () {
-        m_thread = std::thread(&runnable::threadFunction, this);
+        m_thread = std::thread(&Runnable::threadFunction, this);
     };
     void stop ()  {
         m_stop = true;

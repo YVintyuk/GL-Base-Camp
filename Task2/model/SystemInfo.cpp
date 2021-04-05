@@ -1,6 +1,6 @@
-#include "processInfo.h"
-#include "model_view/client.h"
-#include "model_view/runnable.h"
+#include "ProcessInfo.h"
+#include "model_view/Client.h"
+#include "model_view/Runnable.h"
 
 /*
  usedMemory: size_t

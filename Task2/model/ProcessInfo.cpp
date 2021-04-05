@@ -1,7 +1,7 @@
-#include "systemInfo.h"
-#include "processInfo.h"
-#include "model_view/runnable.h"
-#include "model_view/client.h"
+#include "SystemInfo.h"
+#include "ProcessInfo.h"
+#include "model_view/Runnable.h"
+#include "model_view/Client.h"
 #include <dirent.h>
 #include <cstring>
 #include <algorithm>
@@ -14,8 +14,8 @@
  * add info about process to list of process
  * @return
  */
-std::vector <processInfo> getProcessInfoVector() {
-    std::vector <processInfo> ret;
+std::vector <ProcessInfo> getProcessInfoVector() {
+    std::vector <ProcessInfo> ret;
 #ifdef __linux__
     DIR* dir;
     if(!(dir = opendir("/proc"))) {
@@ -30,7 +30,7 @@ std::vector <processInfo> getProcessInfoVector() {
                         [](char c){ return std::isdigit(c); })) {
             continue;
         }
-        ret.push_back(processInfo(atoi(dirp->d_name)));
+        ret.push_back(ProcessInfo(atoi(dirp->d_name)));
     }
     if(closedir(dir)) {
         throw std::runtime_error(std::strerror(errno));

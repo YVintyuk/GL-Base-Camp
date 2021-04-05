@@ -1,9 +1,9 @@
-#include "client.h"
-#include "model/processInfo.h"
-#include "model/systemInfo.h"
+#include "Client.h"
+#include "model/ProcessInfo.h"
+#include "model/SystemInfo.h"
 #include "uiObjects.h"
-#include "runnable.h"
-#include "UI.h"
+#include "Runnable.h"
+#include "UserInterface.h"
 #include <list>
 #include <cstddef>
 
