@@ -29,7 +29,7 @@ public:
     void stop ()  {
         m_stop = true;
        if  (m_thread.joinable()) {
-           m_thread.join()
+           m_thread.join();
        };
     };
 };

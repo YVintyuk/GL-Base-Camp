@@ -21,7 +21,7 @@ private:
     int refreshUI(){
         static int counter = 0;
         static std::string label;
-        counter++;
+        counter = model_view.getCountProcess();
         label = std::to_string(counter);
         Fl::lock();
         box->label(label.c_str());
