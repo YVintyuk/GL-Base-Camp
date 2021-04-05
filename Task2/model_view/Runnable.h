@@ -17,7 +17,10 @@ private:
     };
 
 protected:
-   virtual void iteration() = 0;
+    virtual void iteration() {
+        auto duration = std::chrono::duration<double, std::milli>(1000);
+        std::this_thread::sleep_for(duration);
+    };
 
 public:
     void run () {

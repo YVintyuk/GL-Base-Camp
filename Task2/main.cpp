@@ -2,6 +2,7 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Box.H>
+#include <model_view/UserInterface.h>
 #include "model_view/Client.h"
 
 #ifndef __linux__
@@ -9,32 +10,12 @@
 #include "systemInfoImplWindows.h"
 #endif
 
-// The function we want to execute on the new thread.
-void UIThreadFunction(int argc, char **argv)
-{
-    Fl_Window *window = new Fl_Window(300,180);
-    Fl_Box *box = new Fl_Box(20,40,260,100,"Hello, World!");
-    box->box(FL_UP_BOX);
-    box->labelsize(36);
-    box->labelfont(FL_BOLD+FL_ITALIC);
-    box->labeltype(FL_SHADOW_LABEL);
-    window->end();
-    window->show(argc, argv);
-    Fl::run();
-}
-
 int main(int argc, char **argv) {
     Client model_view { };
     model_view.run();
-
-    // Constructs the new thread and runs it. Does not block execution.
-    std::thread UIThread(UIThreadFunction, argc, argv);
-
+    UserInterface ui { };
 
 //TODO start data gathering thread (client)
 
-// Makes the main thread wait for the new thread to finish execution, therefore blocks its own execution.
-
-    UIThread.join();
     model_view.stop();
 }
