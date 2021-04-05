@@ -11,12 +11,8 @@
 #endif
 
 int main(int argc, char **argv) {
-    Client model_view { };
-    model_view.run();
     UserInterface ui { };
 
 //TODO start data gathering thread (client)
 
-    model_view.stop();
-    ui.stop();
 }

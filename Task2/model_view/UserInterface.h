@@ -8,6 +8,7 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Box.H>
+#include "Client.h"
 
 class UserInterface : public Runnable {
 private:
@@ -16,6 +17,7 @@ private:
     int saveDataNow();
     int changeSavingPeriod(int period);
     int prepareUI();
+    Client model_view { };
     int refreshUI(){
         static int counter = 0;
         static std::string label;
@@ -47,8 +49,14 @@ public:
         box->labeltype(FL_SHADOW_LABEL);
         window->end();
         window->show();
+        model_view.run();
         run();
         Fl::run();
+        stop ();
     }
 
+    ~UserInterface() {
+        model_view.stop();
+        stop();
+    }
 };
