@@ -17,18 +17,22 @@ private:
     int saveDataNow();
     int changeSavingPeriod(int period);
     int prepareUI();
+    std::string freeMemoryLabel;
     Client model_view { };
     int refreshUI(){
-        static int counter = 0;
-        static std::string label;
+        int counter = 0;
+        static std::string processCountLabel;
         counter = model_view.getCountProcess();
-        label = std::to_string(counter);
+        freeMemoryLabel = std::to_string(model_view.getFreeMemory());
+        processCountLabel = std::to_string(counter);
         Fl::lock();
-        box->label(label.c_str());
+        box->label(processCountLabel.c_str());
+        freeMemoryBox->label(freeMemoryLabel.c_str());
         Fl::unlock();
         Fl::awake();
     };
     Fl_Box *box;
+    Fl_Box *freeMemoryBox;
 
 protected:
     virtual void iteration() {
@@ -41,12 +45,18 @@ public:
     // The function we want to execute on the new thread.
     UserInterface () {
         Fl::lock();
-        Fl_Window *window = new Fl_Window(300,180);
+        Fl_Window *window = new Fl_Window(600,180);
         box = new Fl_Box(20,40,260,100,"Hello, World!");
         box->box(FL_UP_BOX);
         box->labelsize(36);
         box->labelfont(FL_BOLD+FL_ITALIC);
         box->labeltype(FL_SHADOW_LABEL);
+
+        freeMemoryBox = new Fl_Box(300,40,260,100,"Hello, World:)!");
+        freeMemoryBox->box(FL_UP_BOX);
+        freeMemoryBox->labelsize(36);
+        freeMemoryBox->labelfont(FL_BOLD+FL_ITALIC);
+        freeMemoryBox->labeltype(FL_SHADOW_LABEL);
         window->end();
         window->show();
         model_view.run();

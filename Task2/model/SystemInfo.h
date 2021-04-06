@@ -37,7 +37,10 @@ private:
     }
 
 public:
-    size_t getFreeMemory();
+    size_t getFreeMemory() {
+            return freeMemory;
+    };
+
     size_t getUsedMemory();
     size_t getUsedCPU();
     std::vector <ProcessInfo> getProcessInfo() {
@@ -45,6 +48,7 @@ public:
     }
     SystemInfo() {
         processInfoVector = getProcessInfoVector();
+        freeMemory = 42;
     }
 };
 

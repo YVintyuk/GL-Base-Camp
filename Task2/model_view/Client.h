@@ -36,5 +36,13 @@ public:
             return 0;
         }
     }
+    size_t getFreeMemory() {
+        auto lastSystemInfo = m_systemInfo.rbegin();
+        if (lastSystemInfo != m_systemInfo.rend()) {
+            return lastSystemInfo->getFreeMemory();
+        } else {
+            return 0;
+        }
+    }
 };
 
