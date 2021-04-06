@@ -6,6 +6,8 @@
 #include <cstring>
 #include <algorithm>
 #include <stdexcept>
+#include <sys/sysctl.h>
+#include <sys/sysinfo.h>
 
 class SystemInfo {
 private:
@@ -13,7 +15,16 @@ private:
     size_t usedMemory;
     size_t usedCPU;
     size_t freeMemory;
-    std::vector <ProcessInfo> getProcessInfoVector() {
+    size_t readFreeMemoryFromSystem() {
+        struct sysinfo info;
+
+        if (sysinfo(&info) < 0)
+            return 0;
+
+        return info.freeram;
+    };
+
+    std::vector <ProcessInfo> readProcessListFromSystem() {
         std::vector <ProcessInfo> ret;
         DIR* dir;
         if(!(dir = opendir("/proc"))) {
@@ -47,8 +58,8 @@ public:
         return processInfoVector;
     }
     SystemInfo() {
-        processInfoVector = getProcessInfoVector();
-        freeMemory = 42;
+        processInfoVector = readProcessListFromSystem();
+        freeMemory = readFreeMemoryFromSystem();
     }
 };
 
