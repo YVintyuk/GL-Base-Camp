@@ -2,6 +2,7 @@
 
 #include <list>
 #include <mutex>
+#include <fstream>
 #include "model/SystemInfo.h"
 #include "Runnable.h"
 
@@ -29,8 +30,12 @@ protected:
 
 public:
     int transferInfoToUI();
-    int saveInfoToFile();
-    int getCountProcess() {
+    void saveInfoToFile(const std::string &fileName, const SystemInfo& systemInfo) {
+        std::ofstream output;
+        output.open(fileName.c_str());
+        output << systemInfo;
+    };
+    size_t getCountProcess() {
         std::lock_guard<std::mutex> clientMutexGuard (clientMutex);
         auto lastSystemInfo = m_systemInfo.rbegin();
         if (lastSystemInfo != m_systemInfo.rend()) {
