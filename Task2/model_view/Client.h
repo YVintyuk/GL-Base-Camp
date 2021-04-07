@@ -1,6 +1,7 @@
 #pragma once
 
 #include <list>
+#include <mutex>
 #include "model/SystemInfo.h"
 #include "Runnable.h"
 
@@ -11,10 +12,11 @@ private:
     int agingCount;
     int saveSystemInfoPeriodicaly();
     int aging();
-
+    std::mutex clientMutex;
 
 protected:
     virtual void iteration() {
+        std::lock_guard<std::mutex> clientMutexGuard (clientMutex);
         if (!m_systemInfo.empty()) {
             m_systemInfo.pop_front();
         }
@@ -29,6 +31,7 @@ public:
     int transferInfoToUI();
     int saveInfoToFile();
     int getCountProcess() {
+        std::lock_guard<std::mutex> clientMutexGuard (clientMutex);
         auto lastSystemInfo = m_systemInfo.rbegin();
         if (lastSystemInfo != m_systemInfo.rend()) {
             return lastSystemInfo->getProcessInfo().size();
@@ -37,6 +40,7 @@ public:
         }
     }
     size_t getFreeMemory() {
+        std::lock_guard<std::mutex> clientMutexGuard (clientMutex);
         auto lastSystemInfo = m_systemInfo.rbegin();
         if (lastSystemInfo != m_systemInfo.rend()) {
             return lastSystemInfo->getFreeMemory();
