@@ -8,16 +8,21 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Box.H>
+#include <Fl/Fl_Button.H>
 #include "Client.h"
 
 class UserInterface : public Runnable {
 private:
+    std::string saveToFile_filename = "onDemandSystemInfo.log";
     std::list <SystemInfo> systemInfoList;
     std::vector <uiObjects> uiObjectsVector;
-    int saveDataNow();
     int changeSavingPeriod(int period);
     int prepareUI();
     std::string freeMemoryLabel;
+    static void onDemandSaveButton_onClick (Fl_Widget* w, void* userInterface) {
+        auto ui = static_cast <UserInterface*> (userInterface);
+        ui->model_view.saveLastSystemInfo(ui->saveToFile_filename);
+    };
     Client model_view { };
     int refreshUI(){
         int counter = 0;
@@ -69,6 +74,14 @@ public:
         freeMemoryBox->labelsize(36);
         freeMemoryBox->labelfont(FL_BOLD+FL_ITALIC);
         freeMemoryBox->labeltype(FL_SHADOW_LABEL);
+
+        Fl_Button* onDemandSaveButton = new Fl_Button (340,250,160,50,"Save to file");
+        onDemandSaveButton->box(FL_UP_BOX);
+        onDemandSaveButton->labelsize(14);
+        onDemandSaveButton->labelfont(FL_BOLD+FL_ITALIC);
+        onDemandSaveButton->labeltype(FL_SHADOW_LABEL);
+        onDemandSaveButton->callback((Fl_Callback*)&UserInterface::onDemandSaveButton_onClick, this);
+
         window->end();
         window->show();
         model_view.run();
