@@ -6,6 +6,11 @@
 #include <cstring>
 #include <algorithm>
 
+std::ostream& operator<<(std::ostream& os, const ProcessInfo& process) {
+    os << "Process info: \n"
+       << "Process id: " << process.pid << "\n";
+};
+
 /**
  * open "/proc"
  * read all files in proc one by one

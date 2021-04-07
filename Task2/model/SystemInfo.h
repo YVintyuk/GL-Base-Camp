@@ -8,6 +8,8 @@
 #include <stdexcept>
 #include <sys/sysctl.h>
 #include <sys/sysinfo.h>
+#include <chrono>
+#include <iostream>
 
 class SystemInfo {
 private:
@@ -48,6 +50,8 @@ private:
     }
 
 public:
+    friend std::ostream& operator<<(std::ostream& os, const SystemInfo& dt);
+    std::chrono::time_point <std::chrono::system_clock> start;
     size_t getFreeMemory() {
             return freeMemory;
     };
@@ -58,6 +62,7 @@ public:
         return processInfoVector;
     }
     SystemInfo() {
+        start = std::chrono::system_clock::now();
         processInfoVector = readProcessListFromSystem();
         freeMemory = readFreeMemoryFromSystem();
     }
