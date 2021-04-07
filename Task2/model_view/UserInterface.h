@@ -46,7 +46,7 @@ public:
     UserInterface () {
         Fl::lock();
         Fl_Window *window = new Fl_Window(600,360);
-        processCountBox = new Fl_Box(20,40,260,100,"Hello, World!");
+        processCountBox = new Fl_Box(20,40,260,100,"Hello");
         processCountBox->box(FL_UP_BOX);
         processCountBox->labelsize(36);
         processCountBox->labelfont(FL_BOLD+FL_ITALIC);
@@ -64,7 +64,7 @@ public:
         freeMemoryBoxDescription->labelfont(FL_BOLD+FL_ITALIC);
         freeMemoryBoxDescription->labeltype(FL_SHADOW_LABEL);
 
-        freeMemoryBox = new Fl_Box(300,40,260,100,"Hello, World!");
+        freeMemoryBox = new Fl_Box(300,40,260,100,"Hello");
         freeMemoryBox->box(FL_UP_BOX);
         freeMemoryBox->labelsize(36);
         freeMemoryBox->labelfont(FL_BOLD+FL_ITALIC);
