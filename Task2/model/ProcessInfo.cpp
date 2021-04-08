@@ -1,5 +1,5 @@
-#include "SystemInfo.h"
 #include "ProcessInfo.h"
+#include "SystemInfo.h"
 #include "model_view/Runnable.h"
 #include "model_view/Client.h"
 #include <dirent.h>
@@ -9,6 +9,10 @@
 std::ostream& operator<<(std::ostream& os, const ProcessInfo& process) {
     os << "Process info: \n"
        << "Process id: " << process.pid << "\n";
+}
+
+ProcessInfo::ProcessInfo(pid_t _pid) {
+    pid = _pid;
 };
 
 /**

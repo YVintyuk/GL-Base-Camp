@@ -15,9 +15,7 @@ private:
 public:
     size_t getUsedMemory();
     size_t getUsedCPU();
-    ProcessInfo(pid_t _pid) {
-        pid = _pid;
-    };
+    ProcessInfo(pid_t _pid);
     std::string getProcessName();
     friend std::ostream& operator<<(std::ostream& os, const ProcessInfo& dt);
 };

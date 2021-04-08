@@ -8,28 +8,12 @@ class Runnable {
 private:
     std::thread m_thread;
     bool m_stop = false;
-    void threadFunction () {
-        while (!m_stop) {
-            iteration();
-            auto duration = std::chrono::duration<double, std::milli>(100);
-            std::this_thread::sleep_for(duration);
-        }
-    };
+    void threadFunction ();
 
 protected:
-    virtual void iteration() {
-        auto duration = std::chrono::duration<double, std::milli>(1000);
-        std::this_thread::sleep_for(duration);
-    };
+    virtual void iteration();
 
 public:
-    void run () {
-        m_thread = std::thread(&Runnable::threadFunction, this);
-    };
-    void stop ()  {
-        m_stop = true;
-       if  (m_thread.joinable()) {
-           m_thread.join();
-       };
-    };
+    void run ();
+    void stop ();
 };
