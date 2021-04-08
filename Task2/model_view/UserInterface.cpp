@@ -3,6 +3,7 @@
 #include "model/SystemInfo.h"
 #include "Runnable.h"
 #include "uiObjects.h"
+#include <FL/Fl_File_Chooser.H>
 
 
 int UserInterface::refreshUI() {
@@ -20,7 +21,18 @@ int UserInterface::refreshUI() {
 
 void UserInterface::onDemandSaveButton_onClick(Fl_Widget *w, void *userInterface) {
     auto ui = static_cast <UserInterface*> (userInterface);
+
+    auto fc = new Fl_File_Chooser (".", nullptr, Fl_File_Chooser::CREATE, "Choose where to save");
+    fc->show();
+    while (fc->shown()) {
+        Fl::wait();
+    }
+    const char* fileName = fc->value();
+    if (fileName) {
+        ui->saveToFile_filename = fileName;
+    }
     ui->model_view.saveLastSystemInfo(ui->saveToFile_filename);
+    delete fc;
 }
 
 void UserInterface::iteration() {
