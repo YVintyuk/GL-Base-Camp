@@ -1,15 +1,10 @@
 #pragma once
 
 #include <vector>
-#include "ProcessInfo.h"
-#include <dirent.h>
-#include <cstring>
-#include <algorithm>
-#include <stdexcept>
-#include <sys/sysctl.h>
-#include <sys/sysinfo.h>
 #include <chrono>
 #include <iostream>
+
+#include "ProcessInfo.h"
 
 class SystemInfo {
 private:
@@ -17,9 +12,9 @@ private:
     size_t usedMemory;
     size_t usedCPU;
     size_t freeMemory;
-    size_t readFreeMemoryFromSystem();
-
-    std::vector <ProcessInfo> readProcessListFromSystem();
+protected:
+    virtual size_t readFreeMemoryFromSystem() = 0;
+    virtual std::vector <ProcessInfo> readProcessListFromSystem() = 0;
 
 public:
     friend std::ostream& operator<<(std::ostream& os, const SystemInfo& dt);
@@ -29,6 +24,6 @@ public:
     size_t getUsedMemory();
     size_t getUsedCPU();
     std::vector <ProcessInfo> getProcessInfo();
-    SystemInfo();
+    void init();
 };
 

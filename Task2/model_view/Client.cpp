@@ -6,6 +6,7 @@
 #include "UserInterface.h"
 #include <list>
 #include <cstddef>
+#include <model/LinuxImpl/SystemInfoImplLinux.h>
 
 
 void Client::saveInfoToFile(const std::string &fileName, const SystemInfo &systemInfo) {
@@ -41,7 +42,12 @@ void Client::iteration() {
             m_systemInfo.pop_front();
         }
 
-        std::shared_ptr<SystemInfo> currentStatus = std::make_shared<SystemInfo>();
+        std::shared_ptr<SystemInfo> currentStatus =
+#ifdef __linux__
+                std::make_shared<SystemInfoImplLinux>();
+#else
+#endif
+        currentStatus->init();
         if (m_systemInfo.size() < 2) {
             m_systemInfo.push_back(currentStatus);
         } else {

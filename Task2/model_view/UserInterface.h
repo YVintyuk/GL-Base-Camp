@@ -14,8 +14,6 @@
 class UserInterface : public Runnable {
 private:
     std::string saveToFile_filename = "onDemandSystemInfo.log";
-    std::list <SystemInfo> systemInfoList;
-    std::vector <uiObjects> uiObjectsVector;
     int changeSavingPeriod(int period);
     int prepareUI();
     std::string freeMemoryLabel;
