@@ -12,7 +12,8 @@ private:
     const std::chrono::minutes m_savingPeriod = std::chrono::minutes(1);
     const std::chrono::seconds m_savingResolution = std::chrono::seconds(30);
     const unsigned int m_agingCount = 10;
-    int saveSystemInfoPeriodicaly();
+    std::list <std::string> m_listOfsavedFiles;
+    void saveSystemInfoPeriodically();
     int aging();
     std::mutex clientMutex;
     void saveInfoToFile(const std::string &fileName, const SystemInfo& systemInfo);
@@ -25,5 +26,7 @@ public:
     void saveLastSystemInfo(const std::string &fileName);
     size_t getCountProcess();
     size_t getFreeMemory();
+
+    void updateSystemInfoQeue(const SystemInfo &currentStatus);
 };
 
