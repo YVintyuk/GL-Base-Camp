@@ -34,11 +34,27 @@ size_t Client::getCountProcess() {
 
 void Client::iteration() {
     std::lock_guard<std::mutex> clientMutexGuard (clientMutex);
-    if (!m_systemInfo.empty()) {
+    if (m_systemInfo.size() == m_agingCount) {
+        printf("Removed old system info from q\n");
         m_systemInfo.pop_front();
     }
+
     SystemInfo currentStatus { };
-    m_systemInfo.push_back(currentStatus);
+    if (m_systemInfo.size() < 2) {
+        m_systemInfo.push_back(currentStatus);
+    } else {
+        auto lastSystemInfoTime = m_systemInfo.rbegin()->start;
+        auto preLastSystemInfoTime = (++m_systemInfo.rbegin())->start;
+        auto timeDiff = lastSystemInfoTime - preLastSystemInfoTime;
+        if (m_systemInfo.size() < m_agingCount && timeDiff > m_savingResolution) {
+            printf("Adding another system info to queue\n");
+            m_systemInfo.push_back(currentStatus);
+        } else {
+            auto last = m_systemInfo.rbegin();
+            *last = currentStatus;
+        }
+    }
+
     printf("Hello, I`m client\n");
     auto duration = std::chrono::duration<double, std::milli>(1000);
     std::this_thread::sleep_for(duration);

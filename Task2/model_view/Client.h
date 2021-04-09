@@ -9,8 +9,9 @@
 class Client : public Runnable {
 private:
     std::list <SystemInfo> m_systemInfo;
-    int savingPeriod;
-    int agingCount;
+    const std::chrono::minutes m_savingPeriod = std::chrono::minutes(1);
+    const std::chrono::seconds m_savingResolution = std::chrono::seconds(30);
+    const unsigned int m_agingCount = 10;
     int saveSystemInfoPeriodicaly();
     int aging();
     std::mutex clientMutex;
