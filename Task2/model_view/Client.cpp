@@ -49,6 +49,7 @@ void Client::iteration() {
         }
     }
     saveSystemInfoPeriodically();
+    aging();
 
     printf("Hello, I`m client\n");
     auto duration = std::chrono::duration<double, std::milli>(1000);
@@ -88,5 +89,12 @@ void Client::saveSystemInfoPeriodically() {
         saveLastSystemInfo(fileName);
         m_listOfsavedFiles.push_back(fileName);
         lastSave = now;
+    }
+}
+
+int Client::aging() {
+    if (m_listOfsavedFiles.size() > 3) {
+        //TODO remove file
+        m_listOfsavedFiles.pop_front();
     }
 }
