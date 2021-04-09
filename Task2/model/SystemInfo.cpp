@@ -20,7 +20,7 @@ size_t SystemInfo::getFreeMemory() {
     return freeMemory;
 }
 
-std::vector<ProcessInfo> SystemInfo::getProcessInfo() {
+std::vector<std::shared_ptr<ProcessInfo>> SystemInfo::getProcessInfo() {
     return processInfoVector;
 }
 

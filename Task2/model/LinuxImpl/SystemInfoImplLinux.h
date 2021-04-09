@@ -7,6 +7,6 @@
 class SystemInfoImplLinux : public SystemInfo {
 protected:
     size_t readFreeMemoryFromSystem() override;
-    std::vector<ProcessInfo> readProcessListFromSystem() override;
+    std::vector<std::shared_ptr<ProcessInfo>> readProcessListFromSystem() override;
 };
 

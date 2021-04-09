@@ -1,4 +1,5 @@
 #include "SystemInfoImplLinux.h"
+#include "ProcessInfoImplLinux.h"
 
 #include <cstring>
 #include <sys/sysctl.h>
@@ -19,8 +20,8 @@ size_t SystemInfoImplLinux::readFreeMemoryFromSystem() {
 }
 
 
-std::vector<ProcessInfo> SystemInfoImplLinux::readProcessListFromSystem() {
-    std::vector <ProcessInfo> ret;
+std::vector<std::shared_ptr<ProcessInfo>> SystemInfoImplLinux::readProcessListFromSystem() {
+    std::vector <std::shared_ptr<ProcessInfo>> ret;
     DIR* dir;
     if(!(dir = opendir("/proc"))) {
         throw std::runtime_error(std::strerror(errno));
@@ -34,7 +35,8 @@ std::vector<ProcessInfo> SystemInfoImplLinux::readProcessListFromSystem() {
                         [](char c){ return std::isdigit(c); })) {
             continue;
         }
-        ret.push_back(ProcessInfo(atoi(dirp->d_name)));
+        std::shared_ptr<ProcessInfo> process = std::make_shared<ProcessInfoImplLinux>(atoi(dirp->d_name));
+        ret.push_back(process);
     }
     if(closedir(dir)) {
         throw std::runtime_error(std::strerror(errno));
