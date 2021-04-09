@@ -19,7 +19,7 @@ void Client::saveLastSystemInfo(const std::string &fileName) {
     std::lock_guard<std::mutex> clientMutexGuard (clientMutex);
     auto lastSystemInfo = m_systemInfo.rbegin();
     if (lastSystemInfo != m_systemInfo.rend()) {
-        saveInfoToFile(fileName, *lastSystemInfo);
+        saveInfoToFile(fileName, **lastSystemInfo);
     }
 }
 
@@ -27,7 +27,7 @@ size_t Client::getCountProcess() {
     std::lock_guard<std::mutex> clientMutexGuard (clientMutex);
     auto lastSystemInfo = m_systemInfo.rbegin();
     if (lastSystemInfo != m_systemInfo.rend()) {
-        return lastSystemInfo->getProcessInfo().size();
+        return (*lastSystemInfo)->getProcessInfo().size();
     } else {
         return 0;
     }
@@ -41,7 +41,7 @@ void Client::iteration() {
             m_systemInfo.pop_front();
         }
 
-        SystemInfo currentStatus{};
+        std::shared_ptr<SystemInfo> currentStatus = std::make_shared<SystemInfo>();
         if (m_systemInfo.size() < 2) {
             m_systemInfo.push_back(currentStatus);
         } else {
@@ -56,9 +56,9 @@ void Client::iteration() {
     std::this_thread::sleep_for(duration);
 }
 
-void Client::updateSystemInfoQeue(const SystemInfo &currentStatus) {
-    auto lastSystemInfoTime = m_systemInfo.rbegin()->start;
-    auto preLastSystemInfoTime = (++m_systemInfo.rbegin())->start;
+void Client::updateSystemInfoQeue(std::shared_ptr<SystemInfo> currentStatus) {
+    auto lastSystemInfoTime = (*m_systemInfo.rbegin())->start;
+    auto preLastSystemInfoTime = (*(++m_systemInfo.rbegin()))->start;
     auto timeDiff = lastSystemInfoTime - preLastSystemInfoTime;
     if (m_systemInfo.size() < m_agingCount && timeDiff > m_savingResolution) {
         printf("Adding another system info to queue\n");
@@ -73,7 +73,7 @@ size_t Client::getFreeMemory() {
     std::lock_guard<std::mutex> clientMutexGuard (clientMutex);
     auto lastSystemInfo = m_systemInfo.rbegin();
     if (lastSystemInfo != m_systemInfo.rend()) {
-        return lastSystemInfo->getFreeMemory();
+        return (*lastSystemInfo)->getFreeMemory();
     } else {
         return 0;
     }
