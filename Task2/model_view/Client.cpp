@@ -100,7 +100,15 @@ void Client::saveSystemInfoPeriodically() {
 
 int Client::aging() {
     if (m_listOfsavedFiles.size() > 3) {
-        //TODO remove file
+        auto fileName = m_listOfsavedFiles.begin();
+        printf("Remove old files %s\n", fileName->c_str());
+        remove(fileName->c_str());
         m_listOfsavedFiles.pop_front();
+    }
+}
+
+Client::~Client() {
+    for (auto fileName : m_listOfsavedFiles) {
+        remove(fileName.c_str());
     }
 }
